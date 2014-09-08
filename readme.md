@@ -1,15 +1,16 @@
 # SQL DSL for CoffeeScript on Node.js for PostgreSQL (coffee-sql)#
 
-is small set of functions to compose SQL queries using Monad and [`function composition`](http://en.wikipedia.org/wiki/Function_composition_(computer_science)) style in CoffeeScript
+is small set of functions to compose SQL queries using [`Monad`](http://en.wikipedia.org/wiki/Monad_(functional_programming)) and [`function composition`](http://en.wikipedia.org/wiki/Function_composition_(computer_science)) style in CoffeeScript
 
 ## About the SQL DSL ##
 If you are authoring a CRUD services in Node.js, you might deal with SQL database and construct sql dynamically depends on client requirements. Using the DSL, you can construct sql queries easily with the high-level little language.
+
 The idea of this DSL is to split complicated sql query to functions and use operators to create a sql query. The SQL DSL can be easily extended with new operators.
 
 ## Details ##
 
-Files:
-- [`coffee-sql.coffee`](https://github.com/)
+File:
+- [`coffee-sql.coffee`](https://github.com/adek1/coffee-sql/blob/master/coffee-sql.coffee)
 
 ### `State Function`
 - [`SQL`](#sqlfunction)
@@ -28,8 +29,13 @@ Files:
 
 ## State Function ##
 
-### <a id="sqlfunction"></a>`SQL`
+### <a id="sqlfunction"></a>`SQL(sql, [params])`
+<a href="#sqlfunction">#</a>
 Creates a SQLMonad that represents a sql query with parameters.
+
+#### Arguments
+1.	`sql` *(string)*: String that represents SQL chank
+2.	`params` *(array)*: Array of parameters. If not specified, defaults to empty array
 
 #### Returns
 The new SQLMonad
@@ -40,12 +46,17 @@ The new SQLMonad
 
 query = SQL "SELECT * FROM table"
 
-// => query.sql == "SELECT * FROM table"
-//    query.params == []
+# => query.sql == "SELECT * FROM table"
+#    query.params == []
 ```
 
-### <a id="sqlmoandfunction"></a>`SQL`
+### <a id="sqlmoandfunction"></a>`SQLMonad(sql, [params])`
 SQLMonad represents a sql query with parameters.
+
+#### Arguments
+1.	`sql` *(string)*: String that represents SQL chank
+2.	`params` *(array)*: Array of parameters. If not specified, defaults to empty array
+
 
 #### Returns
 instance of SQLMonad
@@ -56,14 +67,17 @@ instance of SQLMonad
 
 query = new SQLMonad "SELECT * FROM table"
 
-// => query.sql == "SELECT * FROM table"
-//    query.params == []
+# => query.sql == "SELECT * FROM table"
+#    query.params == []
 ```
 
 ## Operators ##
 
-### <a id="andoperator"></a>`AND`
+### <a id="andoperator"></a>`AND([operators])`
 AND joins sql states with 'AND'
+
+#### Arguments
+1.	`operators` *(array)*: Array of operators
 
 #### Returns
 The new SQLMonad
@@ -78,12 +92,16 @@ query = query.bind AND [
 	SQLPlus "location = 'Prague'"
 ]
 
-// => query.sql == "SELECT * FROM table WHERE (name = 'Tome' AND location = 'Prague')"
-//    query.params == []
+# => query.sql == "SELECT * FROM table
+#	WHERE (name = 'Tome' AND location = 'Prague')"
+#    query.params == []
 ```
 
-### <a id="combineoperator"></a>`Combine`
+### <a id="combineoperator"></a>`Combine([operators])`
 Combine operators together
+
+#### Arguments
+1.	`operators` *(array)*: Array of operators
 
 #### Returns
 The new SQLMonad
@@ -98,15 +116,20 @@ query = query.bind Combine [
 	SQLPlus "JOIN table_new ON table_new.table_id = table.id"
 ]
 
-// => query.sql == "SELECT * FROM table JOIN table_next ON table_next.table_id = table.id JOIN table_new ON table_new.table_id = table.id"
-//    query.params == []
+# => query.sql == "SELECT * FROM table
+#	JOIN table_next ON table_next.table_id = table.id
+#	JOIN table_new ON table_new.table_id = table.id"
+#    query.params == []
 ```
 
-### <a id="combinewithoperator"></a>`CombineWith`
+### <a id="combinewithoperator"></a>`CombineWith(operator)`
 CombineWith joins sql states with input operator
 
+#### Arguments
+1.	`operator` *(string)*: SQL operator to join sql chanks
+
 #### Returns
-The new SQLMonad
+Function, that takes array of operators and join results with operator
 
 #### Example
 ```coffee
@@ -117,21 +140,27 @@ query = SQL().bind CombinWith("UNION") [
 	SQLPlus "SELECT a,b,c FROM table_next"
 ]
 
-// => query.sql == "SELECT a,b,c FROM table UNION SELECT a,b,c FROM table_next"
-//    query.params == []
+# => query.sql == "SELECT a,b,c FROM table UNION SELECT a,b,c FROM table_next"
+#    query.params == []
 ```
 
-### <a id="oroperator"></a>`Or`
+### <a id="oroperator"></a>`Or(operators)`
 Or joins sql states with 'OR',
+
+#### Arguments
+1.	`operators` *(array)*: Array of operators
 
 #### Returns
 The new SQLMonad
 
 #### Example
-Look <a href="#bindoperator">AND</a> operator
+Look <a href="#andoperator">AND</a> operator
 
-### <a id="bindoperator"></a>`SQLMonad.bind`
+### <a id="bindoperator"></a>`SQLMonad.bind(operator|function)`
 A bind function allows a programmer to attach sql state (sql and parameters) to a new operator or function, which accepts a state, then outputs a SQLMonad with a new state
+
+#### Arguments
+1.	`operator` *(function)*: Function transoforms a state to new one
 
 #### Returns
 The new SQLMonad
@@ -143,12 +172,15 @@ The new SQLMonad
 query = SQL("SELECT * FROM table").bind (sql, params) ->
 	SQL "SELECT count(*) FROM (" + sql + ")", params
 
-// => query.sql == "SELECT count(*) FROM (SELECT * FROM table)"
-//    query.params == []
+# => query.sql == "SELECT count(*) FROM (SELECT * FROM table)"
+#    query.params == []
 ```
 
-### <a id="bindleftoperator"></a>`SQLMonad.bindLeft`
+### <a id="bindleftoperator"></a>`SQLMonad.bindLeft([operators])`
 SQLMonad.bindLeft applies bind operator to list of operators or functions
+
+#### Arguments
+1.	`operators` *(array)*: Array of operators
 
 #### Returns
 The new SQLMonad
@@ -162,15 +194,16 @@ query = SQL("SELECT * FROM table").bindLeft [
 	SQLPlus "ORDER BY id"
 ]
 
-// => query.sql == "SELECT * FROM table JOIN table_next ON table_next.table_id = table.id ORDER BY id"
-//    query.params == []
+# => query.sql == "SELECT * FROM table
+#	JOIN table_next ON table_next.table_id = table.id ORDER BY id"
+#    query.params == []
 ```
 
 ### <a id="sqlplusoperator"></a>`SQLPlus(index)`
 SQLPlus operator joins two sql statements together.
 
 #### Arguments
-- `index` *(Int)*: index refers to parameter to replace with
+1.	`index` *(Int)*: index refers to parameter to replace with
 
 #### Returns
 The new SQLMonad
@@ -190,20 +223,22 @@ query = SQL("SELECT * FROM table").bind Where [
 	locationEquals "Prague"
 ]
 
-// => query.sql == "SELECT * FROM table WHERE name = $1 AND location = $2"
-//    query.params == ["Tom", "Prague"]
+# => query.sql == "SELECT * FROM table WHERE name = $1 AND location = $2"
+#    query.params == ["Tom", "Prague"]
 
-or
+# or
 
-query = SQL("SELECT * FROM table").bind SQLPlus ->
-	"WHERE name = 'Tom'"
+query = SQL("SELECT * FROM table").bind SQLPlus "WHERE name = 'Tom'"
 
-// => query.sql == "SELECT * FROM table WHERE name = 'Tom'"
-//    query.params == []
+# => query.sql == "SELECT * FROM table WHERE name = 'Tom'"
+#    query.params == []
 ```
 
 ### <a id="whereoperator"></a>`Where([operators])`
 Where binds each operator in the set and joins non empty results with "AND"
+
+#### Arguments
+1.	`operators` *(Array)*: array of operators
 
 #### Returns
 The new SQLMonad
@@ -217,25 +252,26 @@ query = SQL("SELECT * FROM table").bind Where [
 	SQLPlus "location = 'Prague'"
 ]
 
-// => query.sql == "SELECT * FROM table WHERE name = 'Tome' AND location = 'Prague'"
-//    query.params == []
+# => query.sql == "SELECT * FROM table
+#	WHERE name = 'Tome' AND location = 'Prague'"
+#    query.params == []
 
-or
+# or
 
 query = SQL("SELECT * FROM table").bind Where [
 	SQL
 	SQL
 ]
 
-// => query.sql == "SELECT * FROM table"
-//    query.params == []
+# => query.sql == "SELECT * FROM table"
+#    query.params == []
 ```
 
 ### <a id="whereoroperator"></a>`WhereOr([operators])`
 Where binds each operator in the set and joins non empty results with "OR"
 
 #### Arguments
-- `operators` *(Array)*: array of operators
+1.	`operators` *(Array)*: array of operators
 
 #### Returns
 The new SQLMonad

@@ -13,24 +13,23 @@ File:
 - [`coffee-sql.coffee`](https://github.com/adek1/coffee-sql/blob/master/coffee-sql.coffee)
 
 ### `State Function`
-- [`SQL`](#sqlfunction)
-- [`SQLMonad`](#sqlmoandfunction)
+- [`SQL`](#sqlsql-params)
+- [`SQLMonad`](#sqlmonadsql-params)
 
 ### `Operators`
-- [`And`](#andoperator)
-- [`Combine`](#combineoperator)
+- [`And`](#andoperators)
+- [`Combine`](#combineoperators)
 - [`CombineWith`](#combinewithoperator)
-- [`Or`](#oroperator)
-- [`SQLMonad.bind`](#bindoperator)
-- [`SQLMonad.bindLeft`](#bindleftoperator)
-- [`SQLPlus`](#sqlplusoperator)
-- [`Where`](#whereoperator)
-- [`WhereOr`](#whereoroperator)
+- [`Or`](#oroperators)
+- [`SQLMonad.bind`](#sqlmonadbindoperatorfunction)
+- [`SQLMonad.bindLeft`](#sqlmonadbindleftoperators)
+- [`SQLPlus`](#sqlplusindex)
+- [`Where`](#whereoperators)
+- [`WhereOr`](#whereoroperators)
 
 ## State Function ##
 
 ### <a id="sqlfunction"></a>`SQL(sql, [params])`
-<a href="#sqlfunction">#</a>
 Creates a SQLMonad that represents a sql query with parameters.
 
 #### Arguments

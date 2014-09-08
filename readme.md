@@ -72,7 +72,7 @@ query = new SQLMonad "SELECT * FROM table"
 
 ## Operators ##
 
-### <a id="andoperator"></a>`AND([operators])`
+### <a id="andoperator"></a>`AND(operators)`
 AND joins sql states with 'AND'
 
 #### Arguments
@@ -96,7 +96,7 @@ query = query.bind AND [
 #    query.params == []
 ```
 
-### <a id="combineoperator"></a>`Combine([operators])`
+### <a id="combineoperator"></a>`Combine(operators)`
 Combine operators together
 
 #### Arguments
@@ -175,7 +175,7 @@ query = SQL("SELECT * FROM table").bind (sql, params) ->
 #    query.params == []
 ```
 
-### <a id="bindleftoperator"></a>`SQLMonad.bindLeft([operators])`
+### <a id="bindleftoperator"></a>`SQLMonad.bindLeft(operators)`
 SQLMonad.bindLeft applies bind operator to list of operators or functions
 
 #### Arguments
@@ -233,7 +233,7 @@ query = SQL("SELECT * FROM table").bind SQLPlus "WHERE name = 'Tom'"
 #    query.params == []
 ```
 
-### <a id="whereoperator"></a>`Where([operators])`
+### <a id="whereoperator"></a>`Where(operators)`
 Where binds each operator in the set and joins non empty results with "AND"
 
 #### Arguments
@@ -266,7 +266,7 @@ query = SQL("SELECT * FROM table").bind Where [
 #    query.params == []
 ```
 
-### <a id="whereoroperator"></a>`WhereOr([operators])`
+### <a id="whereoroperator"></a>`WhereOr(operators)`
 Where binds each operator in the set and joins non empty results with "OR"
 
 #### Arguments

@@ -153,7 +153,7 @@ Or joins sql states with 'OR',
 The new SQLMonad
 
 #### Example
-Look <a href="#andoperator">AND</a> operator
+Look <a href="#andoperators">AND</a> operator
 
 ### <a id="bindoperator"></a>`SQLMonad.bind(operator|function)`
 A bind function allows a programmer to attach sql state (sql and parameters) to a new operator or function, which accepts a state, then outputs a SQLMonad with a new state
@@ -276,4 +276,4 @@ Where binds each operator in the set and joins non empty results with "OR"
 The new SQLMonad
 
 #### Example
-Look <a href="#whereoperator">Where</a> operator
+Look <a href="#whereoperators">Where</a> operator

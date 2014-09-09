@@ -10,7 +10,7 @@ describe "SQL Monad", ->
 
 	it "bind query using SQLPlus with array params", ->
 		sql = SQL "SELECT * FROM press"
-		query = sql.bind SQLPlus (index) -> SQL "WHERE url_key = $#{index}", ['press_url_key']
+		query = sql.bind SQLPlus "WHERE url_key = ?", ['press_url_key']
 
 		assert.equal query.sql, "SELECT * FROM press WHERE url_key = $1"
 		assert.deepEqual ['press_url_key'], query.params
@@ -21,9 +21,9 @@ describe "SQL Monad", ->
 			SQLPlus "JOIN tags ON tags.press_id = press.tags_id"
 			SQLPlus "WHERE"
 			And [
-				SQLPlus (index) -> SQL "url_key = $#{index}", ['press_url_key']
-				SQLPlus (index) -> SQL "press.date = $#{index}", ['press_date']
-				SQLPlus (index) -> SQL "tag.url_key = $#{index}", ['tag_url_key']
+				SQLPlus "url_key = ?", ['press_url_key']
+				SQLPlus "press.date = ?", ['press_date']
+				SQLPlus "tag.url_key = ?", ['tag_url_key']
 			]
 		]
 
@@ -47,6 +47,8 @@ describe "SQL Monad", ->
 		query = sql.bind Where [
 			SQL
 			SQL
+			null
+			undefined
 		]
 
 		assert.equal query.sql, "SELECT * FROM press"

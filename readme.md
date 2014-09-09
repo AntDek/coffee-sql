@@ -198,11 +198,12 @@ query = SQL("SELECT * FROM table").bindLeft [
 #    query.params == []
 ```
 
-### <a id="sqlplusoperator"></a>`SQLPlus(index)`
+### <a id="sqlplusoperator"></a>`SQLPlus(sql, [params])`
 SQLPlus operator joins two sql statements together.
 
 #### Arguments
-1.	`index` *(Int)*: index refers to parameter to replace with
+1.	`sql` *(string)*: Chank of sql query
+2.	`params` *(string)*: Array of parameters. If not specified, defaults to empty array
 
 #### Returns
 The new SQLMonad
@@ -211,11 +212,11 @@ The new SQLMonad
 ```coffee
 {SQL, SQLPlus, Where} = require "coffee-sql"
 
-nameEquals = (name) -> SQLPlus (index) ->
-	SQL "name = $#{index}", [name]
+nameEquals = (name) ->
+	SQLPlus "name = ?", [name]
 
-locationEquals = (place) -> SQLPlus (index) ->
-	SQL "location = $#{index}", [place]
+locationEquals = (place) ->
+	SQLPlus "location = ?", [place]
 
 query = SQL("SELECT * FROM table").bind Where [
 	nameEquals "Tom"

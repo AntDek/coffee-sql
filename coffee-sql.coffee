@@ -8,7 +8,8 @@ SQLMonad = (sql, params) ->
 	this
 
 SQLMonad.prototype.bind = (fn) ->
-	throw "Bind exception. Only function can be passed to bind operator." if  typeof fn isnt "function"
+	return this if fn is undefined or fn is null
+	throw "Bind exception. Only function or undefined can be passed to bind operator." if  typeof fn isnt "function"
 	next = fn this.sql, this.params
 	new SQLMonad next.sql, next.params
 
@@ -37,12 +38,15 @@ CombineWith = (opr, wrapStart = null, wrapEnd = null) -> (fns) -> (sql, params) 
 	rsSql = if (sql isnt "") then "#{sql} #{rsSql}" else rsSql
 	SQL rsSql, qs.pop()?.params
 
-SQLPlus = (fn) -> (sql, params) ->
+SQLPlus = (tailSql, tailParams = []) -> (sql, params) ->
 	tail = (
-		if (typeof fn is "string")
-			{sql: fn, params: params}
-		else
-			fn params.length + 1
+		if (typeof tailSql isnt "string")
+			throw "Input parameter exception. Input parameter to operator should be string or instanceof SQLMonad"
+		if (tailParams.length > 0)
+			i = params.length + 1
+			tailSql = tailSql.replace /\?/g, ->
+				"$#{i++}"
+		{sql: tailSql, params: tailParams}
 	)
 
 	rsSql = (

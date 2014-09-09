@@ -23,7 +23,7 @@ File:
 - [`Or`](#oroperators)
 - [`SQLMonad.bind`](#sqlmonadbindoperatorfunction)
 - [`SQLMonad.bindLeft`](#sqlmonadbindleftoperators)
-- [`SQLPlus`](#sqlplusindex)
+- [`SQLPlus`](#sqlplussql-params)
 - [`Where`](#whereoperators)
 - [`WhereOr`](#whereoroperators)
 

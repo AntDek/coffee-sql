@@ -33,7 +33,7 @@ File:
 Creates a SQLMonad that represents a sql query with parameters.
 
 #### Arguments
-1.	`sql` *(string)*: String that represents SQL chank
+1.	`sql` *(string)*: String that represents SQL chunk
 2.	`params` *(array)*: Array of parameters. If not specified, defaults to empty array
 
 #### Returns
@@ -53,7 +53,7 @@ query = SQL "SELECT * FROM table"
 SQLMonad represents a sql query with parameters.
 
 #### Arguments
-1.	`sql` *(string)*: String that represents SQL chank
+1.	`sql` *(string)*: String that represents SQL chunk
 2.	`params` *(array)*: Array of parameters. If not specified, defaults to empty array
 
 
@@ -125,7 +125,7 @@ query = query.bind Combine [
 CombineWith joins sql states with input operator
 
 #### Arguments
-1.	`operator` *(string)*: SQL operator to join sql chanks
+1.	`operator` *(string)*: SQL operator to join sql chunks
 
 #### Returns
 Function, that takes array of operators and join results with operator
@@ -202,7 +202,7 @@ query = SQL("SELECT * FROM table").bindLeft [
 SQLPlus operator joins two sql statements together.
 
 #### Arguments
-1.	`sql` *(string)*: Chank of sql query
+1.	`sql` *(string)*: Chunk of sql query
 2.	`params` *(string)*: Array of parameters. If not specified, defaults to empty array
 
 #### Returns
